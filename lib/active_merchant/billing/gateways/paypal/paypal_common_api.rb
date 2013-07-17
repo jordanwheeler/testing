@@ -564,6 +564,8 @@ module ActiveMerchant #:nodoc:
           item_total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
           item_total = localized_amount(options[:subtotal], currency_code) if item_total == 0
           puts "JORDAN item_total is #{item_total}"
+          REMOVETHISVAR = formatted_total(item_total, currency_code)
+          puts "JORDAN after method item_total is #{REMOVETHISVAR}"
 
           # All of the values must be included together and add up to the order total
           other_totals = 0
@@ -572,7 +574,7 @@ module ActiveMerchant #:nodoc:
             handling_total = localized_amount(options[:handling], currency_code)
             tax_total = localized_amount(options[:tax], currency_code)
             other_totals = shipping_total.to_d + handling_total.to_d + tax_total.to_d
-            xml.tag! 'n2:ItemTotal', item_total, 'currencyID' => currency_code
+            xml.tag! 'n2:ItemTotal', REMOVETHISVAR, 'currencyID' => currency_code
             xml.tag! 'n2:ShippingTotal', shipping_total,'currencyID' => currency_code
             xml.tag! 'n2:HandlingTotal', handling_total,'currencyID' => currency_code
             xml.tag! 'n2:TaxTotal', tax_total, 'currencyID' => currency_code
@@ -581,6 +583,8 @@ module ActiveMerchant #:nodoc:
 
           order_total = item_total + other_totals
           puts "JORDAN order_total is #{order_total}"
+          formatted_total(order_total, currency_code)
+            puts "JORDAN after method order_total is #{order_total}"
 
           xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
 
