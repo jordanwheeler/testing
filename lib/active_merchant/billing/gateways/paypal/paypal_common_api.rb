@@ -38,6 +38,8 @@ module ActiveMerchant #:nodoc:
 
       FRAUD_REVIEW_CODE = "11610"
 
+      CURRENCIES_WITHOUT_FRACTIONS = [ 'JPY', 'HUF', 'TWD' ]
+
       def self.included(base)
         base.default_currency = 'USD'
         base.cattr_accessor :pem_file
@@ -583,10 +585,10 @@ module ActiveMerchant #:nodoc:
 
           order_total = item_total + other_totals
           puts "JORDAN order_total is #{order_total}"
-          formatted_total(order_total, currency_code)
-            puts "JORDAN after method order_total is #{order_total}"
+          TEMPVAR = formatted_total(order_total, currency_code)
+            puts "JORDAN after method order_total is #{TEMPVAR}"
 
-          xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
+          xml.tag! 'n2:OrderTotal', TEMPVAR, 'currencyID' => currency_code
 
           xml.tag! 'n2:InsuranceTotal', localized_amount(options[:insurance_total], currency_code),'currencyID' => currency_code unless options[:insurance_total].blank?
           xml.tag! 'n2:ShippingDiscount', localized_amount(options[:shipping_discount], currency_code),'currencyID' => currency_code unless options[:shipping_discount].blank?
@@ -679,6 +681,10 @@ module ActiveMerchant #:nodoc:
 
       def date_to_iso(date)
         (date.is_a?(Date) ? date.to_time : date).utc.iso8601
+      end
+
+      def formatted_total(amount, currency)
+        CURRENCIES_WITHOUT_FRACTIONS.include?(currency.to_s) ? amount.to_s.split('.').first : sprintf("%.2f", amount)
       end
     end
   end

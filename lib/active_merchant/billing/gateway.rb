@@ -164,10 +164,6 @@ module ActiveMerchant #:nodoc:
         CURRENCIES_WITHOUT_FRACTIONS.include?(currency.to_s) ? amount.split('.').first : amount
       end
 
-      def formatted_total(amount, currency)
-        CURRENCIES_WITHOUT_FRACTIONS.include?(currency.to_s) ? amount.to_s.split('.').first : sprintf("%.2f", amount)
-      end
-
       def currency(money)
         money.respond_to?(:currency) ? money.currency : self.default_currency
       end
