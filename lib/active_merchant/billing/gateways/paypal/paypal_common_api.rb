@@ -543,10 +543,10 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Number', item[:number]
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
-              
-
-              xml.tag! 'n2:Amount', localized_amount(item[:amount], currency_code), 'currencyID' => currency_code
-              total_amount += item[:amount].to_i
+              item_amount = localized_amount(item[:amount], currency_code)
+              puts "JORDAN in the loop item_amount is #{item_amount}"
+              xml.tag! 'n2:Amount', item_amount, 'currencyID' => currency_code
+              total_amount += item_amount.to_d
               puts "JORDAN in the loop total_amount is #{total_amount}"
             end
             xml.tag! 'n2:Description', item[:description]
@@ -571,7 +571,7 @@ module ActiveMerchant #:nodoc:
             shipping_total = localized_amount(options[:shipping], currency_code)
             handling_total = localized_amount(options[:handling], currency_code)
             tax_total = localized_amount(options[:tax], currency_code)
-            other_totals = shipping_total.to_i + handling_total.to_i + tax_total.to_i
+            other_totals = shipping_total.to_d + handling_total.to_d + tax_total.to_d
             xml.tag! 'n2:ItemTotal', item_total, 'currencyID' => currency_code
             xml.tag! 'n2:ShippingTotal', shipping_total,'currencyID' => currency_code
             xml.tag! 'n2:HandlingTotal', handling_total,'currencyID' => currency_code
