@@ -543,22 +543,23 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Number', item[:number]
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
-              amount = localized_amount(item[:amount], currency_code)
-              xml.tag! 'n2:Amount', amount, 'currencyID' => currency_code
-              total += amount.to_i
+              total += item[:amount]
+              puts "the total amount JORDAN is #{item[:amount]}"
+              xml.tag! 'n2:Amount', localized_amount(item[:amount], currency_code), 'currencyID' => currency_code
             end
             xml.tag! 'n2:Description', item[:description]
             xml.tag! 'n2:ItemURL', item[:url]
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
-        puts "the amount JORDANW is #{total}"
+        puts "the total amount JORDAN is #{total}"
         total
       end
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
           total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
+          puts "the total JORDAN is #{total}"
           money = total unless (total.nil? or total == 0)
           puts "the money JORDAN is #{money}"
           xml.tag! 'n2:OrderTotal', localized_amount(money, currency_code), 'currencyID' => currency_code
