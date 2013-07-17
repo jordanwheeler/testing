@@ -536,12 +536,14 @@ module ActiveMerchant #:nodoc:
       end
 
       def add_payment_details_items_xml(xml, options, currency_code)
+        total = 0
         options[:items].each do |item|
           xml.tag! 'n2:PaymentDetailsItem' do
             xml.tag! 'n2:Name', item[:name]
             xml.tag! 'n2:Number', item[:number]
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
+              total += item[:amount]
               xml.tag! 'n2:Amount', localized_amount(item[:amount], currency_code), 'currencyID' => currency_code
             end
             xml.tag! 'n2:Description', item[:description]
@@ -549,10 +551,13 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
+        total
       end
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
+          total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
+          money == total unless (total.nil? or total == 0)
           xml.tag! 'n2:OrderTotal', localized_amount(money, currency_code), 'currencyID' => currency_code
 
           # All of the values must be included together and add up to the order total
@@ -580,8 +585,6 @@ module ActiveMerchant #:nodoc:
           xml.tag! 'n2:NotifyURL', options[:notify_url] unless options[:notify_url].blank?
 
           add_address(xml, 'n2:ShipToAddress', options[:shipping_address]) unless options[:shipping_address].blank?
-
-          add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
 
           add_express_only_payment_details(xml, options) if options[:express_request]
 
