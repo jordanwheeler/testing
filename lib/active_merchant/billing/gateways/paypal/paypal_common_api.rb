@@ -555,7 +555,7 @@ module ActiveMerchant #:nodoc:
           end
         end
         puts "JORDAN final total_amount is #{total_amount}"
-        total_amount = localized_amount(sprintf("%.2f", total_amount), currency_code)
+        total_amount
       end
 
       def add_payment_details(xml, money, currency_code, options = {})
@@ -572,18 +572,17 @@ module ActiveMerchant #:nodoc:
             handling_total = localized_amount(options[:handling], currency_code)
             tax_total = localized_amount(options[:tax], currency_code)
             other_totals = shipping_total.to_d + handling_total.to_d + tax_total.to_d
-            xml.tag! 'n2:ItemTotal', item_total, 'currencyID' => currency_code
+            xml.tag! 'n2:ItemTotal', localized_amount(item_total, currency_code), 'currencyID' => currency_code
             xml.tag! 'n2:ShippingTotal', shipping_total,'currencyID' => currency_code
             xml.tag! 'n2:HandlingTotal', handling_total,'currencyID' => currency_code
             xml.tag! 'n2:TaxTotal', tax_total, 'currencyID' => currency_code
           end
           puts "JORDAN other_totals is #{other_totals}"
-          puts "JORDAN to_d is defined in #{String.instance_method(:to_d).source_location}"
 
-          order_total = sprintf("%.2f", (item_total.to_d + other_totals))
+          order_total = item_total + other_totals
           puts "JORDAN order_total is #{order_total}"
 
-          xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
+          xml.tag! 'n2:OrderTotal', localized_amount(order_total, currency_code), 'currencyID' => currency_code
 
           xml.tag! 'n2:InsuranceTotal', localized_amount(options[:insurance_total], currency_code),'currencyID' => currency_code unless options[:insurance_total].blank?
           xml.tag! 'n2:ShippingDiscount', localized_amount(options[:shipping_discount], currency_code),'currencyID' => currency_code unless options[:shipping_discount].blank?
