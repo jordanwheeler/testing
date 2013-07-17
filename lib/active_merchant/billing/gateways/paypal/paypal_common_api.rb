@@ -552,15 +552,17 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
-        puts "the amount is #{total}"
-        Rails.logger.info("the amount is #{total}")
-        total
+        puts "the amount JORDANW is #{total}"
+        Rails.logger.info("the amount JORDANW is #{total}")
+        return total
       end
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
           total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
           money == total unless (total.nil? or total == 0)
+          puts "the money JORDAN is #{money}"
+          Rails.logger.info("the money JORDAN is #{money}")
           xml.tag! 'n2:OrderTotal', localized_amount(money, currency_code), 'currencyID' => currency_code
 
           # All of the values must be included together and add up to the order total
