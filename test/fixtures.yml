@@ -352,9 +352,9 @@ paypal_certificate:
     PASTE YOUR PEM FILE HERE
 
 paypal_signature:
-  login: seller_api1.jadedpallet.com
-  password: QMJVFP5FU2ATNLGX
-  signature: A0xHEN7X5fzjpyyRG1cdUZymL2olA40x5kvUXL3NJ13jVKsp7sGknk61
+  login: LOGIN
+  password: PASSWORD
+  signature: SIGNATURE
 
 payway:
   username:
