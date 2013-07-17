@@ -560,6 +560,7 @@ module ActiveMerchant #:nodoc:
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
           total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
+          puts "the total JORDAN is #{total}"
           money == total
           puts "the money JORDAN is #{money}"
           Rails.logger.info("the money JORDAN is #{money}")
