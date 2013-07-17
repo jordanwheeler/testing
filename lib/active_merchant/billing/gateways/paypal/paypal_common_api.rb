@@ -545,7 +545,7 @@ module ActiveMerchant #:nodoc:
             if item[:amount]
               amount = localized_amount(item[:amount], currency_code)
               xml.tag! 'n2:Amount', amount, 'currencyID' => currency_code
-              total += amount
+              total += amount.to_i
             end
             xml.tag! 'n2:Description', item[:description]
             xml.tag! 'n2:ItemURL', item[:url]
