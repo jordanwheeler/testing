@@ -552,7 +552,8 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
-        Rails.logger.info("the amount is #{amount}")
+        puts "the amount is #{total}"
+        Rails.logger.info("the amount is #{total}")
         total
       end
 
