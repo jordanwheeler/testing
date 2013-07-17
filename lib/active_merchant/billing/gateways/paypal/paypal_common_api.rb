@@ -557,9 +557,9 @@ module ActiveMerchant #:nodoc:
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
-          item_total_amount = 0
-          item_total_amount = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
-          item_total_amount = localized_amount(options[:subtotal], currency_code) if item_total_amount == 0
+          item_total = 0
+          item_total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
+          item_total = localized_amount(options[:subtotal], currency_code) if item_total == 0
 
           # All of the values must be included together and add up to the order total
           other_totals = 0
