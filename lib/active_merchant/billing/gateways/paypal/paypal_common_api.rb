@@ -543,8 +543,8 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Number', item[:number]
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
-              total += item[:amount].to_i
-              puts "the total amount JORDAN is #{item[:amount]}"
+              total += amount(item[:amount])
+              puts "the total amount JORDAN is #{total}"
               xml.tag! 'n2:Amount', localized_amount(item[:amount], currency_code), 'currencyID' => currency_code
             end
             xml.tag! 'n2:Description', item[:description]
