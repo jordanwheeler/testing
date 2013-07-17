@@ -544,31 +544,25 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
               item_amount = localized_amount(item[:amount], currency_code)
-              puts "the in loop amount JORDAN is #{item_amount}"
               xml.tag! 'n2:Amount', item_amount, 'currencyID' => currency_code
               total_amount += item_amount.to_i
-              puts "total in the loop JORDAN is #{total_amount}"
             end
             xml.tag! 'n2:Description', item[:description]
             xml.tag! 'n2:ItemURL', item[:url]
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
-        puts "the end total amount JORDAN is #{total_amount}"
         total_amount
       end
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
+          item_total_amount = 0
           item_total_amount = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
-
-          if (item_total_amount.nil? or item_total_amount == 0)
-            item_total = localized_amount(options[:subtotal], currency_code)
-          else
-            item_total = item_total_amount
-          end
+          item_total_amount = localized_amount(options[:subtotal], currency_code) if item_total_amount == 0
 
           # All of the values must be included together and add up to the order total
+          other_totals = 0
           if [:subtotal, :shipping, :handling, :tax].all?{ |o| options.has_key?(o) }
             shipping_total = localized_amount(options[:shipping], currency_code)
             handling_total = localized_amount(options[:handling], currency_code)
@@ -580,11 +574,7 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:TaxTotal', tax_total, 'currencyID' => currency_code
           end
 
-          if (!defined?(other_totals) or other_totals == 0)
-            order_total = item_total
-          else
-            order_total = item_total + other_totals
-          end
+          order_total = item_total + other_totals
 
           xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
 
