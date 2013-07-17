@@ -544,14 +544,17 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
               item_amount = localized_amount(item[:amount], currency_code)
+              puts "JORDAN in the loop item_amount is #{item_amount}"
               xml.tag! 'n2:Amount', item_amount, 'currencyID' => currency_code
               total_amount += item_amount.to_i
+              puts "JORDAN in the loop total_amount is #{total_amount}"
             end
             xml.tag! 'n2:Description', item[:description]
             xml.tag! 'n2:ItemURL', item[:url]
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
+        puts "JORDAN final total_amount is #{total_amount}"
         total_amount
       end
 
@@ -560,6 +563,7 @@ module ActiveMerchant #:nodoc:
           item_total = 0
           item_total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
           item_total = localized_amount(options[:subtotal], currency_code) if item_total == 0
+          puts "JORDAN item_total is #{item_total}"
 
           # All of the values must be included together and add up to the order total
           other_totals = 0
@@ -573,8 +577,10 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:HandlingTotal', handling_total,'currencyID' => currency_code
             xml.tag! 'n2:TaxTotal', tax_total, 'currencyID' => currency_code
           end
+          puts "JORDAN other_totals is #{other_totals}"
 
           order_total = item_total + other_totals
+          puts "JORDAN order_total is #{order_total}"
 
           xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
 
