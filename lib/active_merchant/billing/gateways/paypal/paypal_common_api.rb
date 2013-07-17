@@ -572,7 +572,7 @@ module ActiveMerchant #:nodoc:
             handling_total = localized_amount(options[:handling], currency_code)
             tax_total = localized_amount(options[:tax], currency_code)
             other_totals = shipping_total.to_d + handling_total.to_d + tax_total.to_d
-            xml.tag! 'n2:ItemTotal', localized_amount(item_total, currency_code), 'currencyID' => currency_code
+            xml.tag! 'n2:ItemTotal', item_total, 'currencyID' => currency_code
             xml.tag! 'n2:ShippingTotal', shipping_total,'currencyID' => currency_code
             xml.tag! 'n2:HandlingTotal', handling_total,'currencyID' => currency_code
             xml.tag! 'n2:TaxTotal', tax_total, 'currencyID' => currency_code
@@ -582,7 +582,7 @@ module ActiveMerchant #:nodoc:
           order_total = item_total + other_totals
           puts "JORDAN order_total is #{order_total}"
 
-          xml.tag! 'n2:OrderTotal', localized_amount(order_total, currency_code), 'currencyID' => currency_code
+          xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
 
           xml.tag! 'n2:InsuranceTotal', localized_amount(options[:insurance_total], currency_code),'currencyID' => currency_code unless options[:insurance_total].blank?
           xml.tag! 'n2:ShippingDiscount', localized_amount(options[:shipping_discount], currency_code),'currencyID' => currency_code unless options[:shipping_discount].blank?
