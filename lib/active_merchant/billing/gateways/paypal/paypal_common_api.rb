@@ -543,26 +543,31 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Number', item[:number]
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
-              total += amount(item[:amount]).to_i
-              puts "the total amount JORDAN is #{total}"
-              xml.tag! 'n2:Amount', localized_amount(item[:amount], currency_code), 'currencyID' => currency_code
+              amount = localized_amount(item[:amount], currency_code)
+              puts "the in loop amount JORDAN is #{amount}"
+              xml.tag! 'n2:Amount', amount, 'currencyID' => currency_code
+              total += amount
+              puts "total in the loop JORDAN is #{total}"
             end
             xml.tag! 'n2:Description', item[:description]
             xml.tag! 'n2:ItemURL', item[:url]
             xml.tag! 'n2:ItemCategory', item[:category] if item[:category]
           end
         end
-        puts "the total amount JORDAN is #{total}"
+        puts "the end total amount JORDAN is #{total}"
         total
       end
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
           total = add_payment_details_items_xml(xml, options, currency_code) unless options[:items].blank?
-          puts "the total JORDAN is #{total}"
-          money = total unless (total.nil? or total == 0)
-          puts "the money JORDAN is #{money}"
-          xml.tag! 'n2:OrderTotal', localized_amount(money, currency_code), 'currencyID' => currency_code
+          if (total.nil? or total == 0)
+            amount = localized_amount(money, currency_code)
+          else
+            amount = total
+          end
+          puts "the money sent JORDAN is #{amount}"
+          xml.tag! 'n2:OrderTotal', amount, 'currencyID' => currency_code
 
           # All of the values must be included together and add up to the order total
           if [:subtotal, :shipping, :handling, :tax].all?{ |o| options.has_key?(o) }
