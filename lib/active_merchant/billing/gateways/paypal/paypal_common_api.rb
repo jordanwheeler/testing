@@ -544,7 +544,7 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
               
-              puts "JORDAN in the loop item_amount is #{item_amount}"
+
               xml.tag! 'n2:Amount', localized_amount(item[:amount], currency_code), 'currencyID' => currency_code
               total_amount += item[:amount].to_i
               puts "JORDAN in the loop total_amount is #{total_amount}"
