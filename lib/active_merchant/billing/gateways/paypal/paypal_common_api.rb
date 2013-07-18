@@ -554,7 +554,9 @@ module ActiveMerchant #:nodoc:
                 puts "JORDAN total is #{total}"
                 puts "JORDAN subtotal to i is #{subtotal.to_i}"
                 puts "JORDAN total to i is #{total.to_i}"
-                localized = subtotal.to_i - total.to_i
+                diff = subtotal.to_i - total.to_i
+                puts "diff is #{diff}"
+                localized = localized + diff
                 puts "JORDAN localized is #{localized}"
               end
               xml.tag! 'n2:Amount', localized, 'currencyID' => currency_code
