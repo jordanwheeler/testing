@@ -38,7 +38,7 @@ module ActiveMerchant #:nodoc:
 
       FRAUD_REVIEW_CODE = "11610"
 
-      CURRENCIES_WITHOUT_FRACTIONS = [ 'JPY', 'HUF', 'TWD' ]
+      NON_DECIMAL_CURRENCIES = [ 'JPY', 'HUF', 'TWD' ]
 
       def self.included(base)
         base.default_currency = 'USD'
@@ -538,8 +538,8 @@ module ActiveMerchant #:nodoc:
       end
 
       def add_payment_details_items_xml(xml, options, currency_code)
-        non_decimal = true if CURRENCIES_WITHOUT_FRACTIONS.include?(currency_code.to_s)
-        item_total = 0 if non_decimal
+        non_decimal_discount = true if NON_DECIMAL_CURRENCIES.include?(currency_code.to_s) && options[:items][-1][:amount] < 0
+        item_total = 0 if non_decimal_discount
         options[:items].each do |item|
           xml.tag! 'n2:PaymentDetailsItem' do
             xml.tag! 'n2:Name', item[:name]
@@ -547,10 +547,9 @@ module ActiveMerchant #:nodoc:
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
               item_amount = localized_amount(item[:amount], currency_code)
-              item_total += item_amount.to_i if non_decimal
-              if (item[:amount].to_i < 0 && non_decimal)
-                rounding_error = options[:subtotal].to_i - item_total
-                item_amount = item_amount.to_i + rounding_error
+              item_total += item_amount.to_i if non_decimal_discount
+              if (non_decimal_discount && item[:amount].to_i < 0)
+                item_amount = item_amount.to_i + options[:subtotal].to_i - item_total
               end
               xml.tag! 'n2:Amount', item_amount, 'currencyID' => currency_code
             end
