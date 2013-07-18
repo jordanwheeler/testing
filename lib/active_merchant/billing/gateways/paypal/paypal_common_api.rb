@@ -539,20 +539,20 @@ module ActiveMerchant #:nodoc:
 
       def add_payment_details_items_xml(xml, options, currency_code)
         non_decimal = true if CURRENCIES_WITHOUT_FRACTIONS.include?(currency_code.to_s)
-        total = 0 if non_decimal
+        item_total = 0 if non_decimal
         options[:items].each do |item|
           xml.tag! 'n2:PaymentDetailsItem' do
             xml.tag! 'n2:Name', item[:name]
             xml.tag! 'n2:Number', item[:number]
             xml.tag! 'n2:Quantity', item[:quantity]
             if item[:amount]
-              localized = localized_amount(item[:amount], currency_code)
-              total += localized.to_i if non_decimal
+              item_amount = localized_amount(item[:amount], currency_code)
+              item_total += item_amount.to_i if non_decimal
               if (item[:amount].to_i < 0 && non_decimal)
-                diff = (localized_amount(options[:subtotal], currency_code)).to_i - total
-                localized = localized.to_i + diff
+                rounding_error = (localized_amount(options[:subtotal], currency_code)).to_i - item_total
+                item_amount = item_amount.to_i + rounding_error
               end
-              xml.tag! 'n2:Amount', localized, 'currencyID' => currency_code
+              xml.tag! 'n2:Amount', item_amount, 'currencyID' => currency_code
             end
             xml.tag! 'n2:Description', item[:description]
             xml.tag! 'n2:ItemURL', item[:url]
