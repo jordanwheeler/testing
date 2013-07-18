@@ -548,7 +548,7 @@ module ActiveMerchant #:nodoc:
             if item[:amount]
               localized = localized_amount(item[:amount], currency_code)
               total += localized.to_i if non_decimal
-              if (item[:amount] < 0 && non_decimal)
+              if (item[:amount].to_i < 0 && non_decimal)
                 diff = (localized_amount(options[:subtotal], currency_code)).to_i - total
                 localized = localized.to_i + diff
               end
