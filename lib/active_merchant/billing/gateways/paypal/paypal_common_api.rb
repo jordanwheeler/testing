@@ -549,7 +549,7 @@ module ActiveMerchant #:nodoc:
               item_amount = localized_amount(item[:amount], currency_code)
               item_total += item_amount.to_i if non_decimal
               if (item[:amount].to_i < 0 && non_decimal)
-                rounding_error = (localized_amount(options[:subtotal], currency_code)).to_i - item_total
+                rounding_error = options[:subtotal].to_i - item_total
                 item_amount = item_amount.to_i + rounding_error
               end
               xml.tag! 'n2:Amount', item_amount, 'currencyID' => currency_code
