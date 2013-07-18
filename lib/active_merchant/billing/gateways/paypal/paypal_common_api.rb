@@ -549,7 +549,13 @@ module ActiveMerchant #:nodoc:
               localized = localized_amount(item[:amount], currency_code)
               total += localized.to_d if non_decimal
               if (item[:name] == 'Discount' && non_decimal)
-                localized = (localized_amount(options[:subtotal], currency_code)).to_i - total.to_i
+                subtotal = (localized_amount(options[:subtotal], currency_code)
+                puts "JORDAN subtotal is #{subtotal}"
+                puts "JORDAN total is #{total}"
+                puts "JORDAN subtotal to i is #{subtotal.to_i}"
+                puts "JORDAN total to i is #{total.to_i}"
+                localized = subtotal.to_i - total.to_i
+                puts "JORDAN localized is #{localized}"
               end
               xml.tag! 'n2:Amount', localized, 'currencyID' => currency_code
             end
