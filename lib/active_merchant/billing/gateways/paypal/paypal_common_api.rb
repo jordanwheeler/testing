@@ -538,7 +538,7 @@ module ActiveMerchant #:nodoc:
       end
 
       def add_payment_details_items_xml(xml, options, currency_code)
-        non_decimal_discount = true if NON_DECIMAL_CURRENCIES.include?(currency_code.to_s) && options[:items][-1][:amount] < 0
+        non_decimal_discount = true if NON_DECIMAL_CURRENCIES.include?(currency_code.to_s) && options[:items][-1][:amount].to_i < 0
         item_total = 0 if non_decimal_discount
         options[:items].each do |item|
           xml.tag! 'n2:PaymentDetailsItem' do
