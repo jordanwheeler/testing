@@ -670,7 +670,11 @@ module ActiveMerchant #:nodoc:
         fractional_discount_code?(item) && non_fractional_currency?(currency_code)
       end
 
-      def recalculated_total(amount)
+      def recalculated_subtotal(money)
+        money.to_f.ceil
+      end
+      def recalculated_total(money)
+        amount = amount(money)
         amount.to_f.ceil
       end
     end
