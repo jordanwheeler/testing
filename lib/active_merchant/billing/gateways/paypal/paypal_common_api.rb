@@ -669,7 +669,7 @@ module ActiveMerchant #:nodoc:
       end
 
       def recalculated_subtotal(subtotal)
-        subtotal.to_i.ceil
+        subtotal.to_f.ceil
       end
     end
   end
