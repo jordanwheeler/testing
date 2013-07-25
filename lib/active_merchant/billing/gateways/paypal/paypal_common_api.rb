@@ -558,7 +558,7 @@ module ActiveMerchant #:nodoc:
           # All of the values must be included together and add up to the order total
           if [:subtotal, :shipping, :handling, :tax].all?{ |o| options.has_key?(o) }
             subtotal = localized_amount(options[:subtotal], currency_code)
-            subtotal = recalculated_subtotal(options[:subtotal]) if fractional_discount_code_and_non_fractional_currency?(options[:items][-1][:amount], currency_code)
+            subtotal = recalculated_subtotal(options[:subtotal]) if fractional_discount_code_and_non_fractional_currency?(options[:items][-1], currency_code)
             xml.tag! 'n2:ItemTotal', subtotal, 'currencyID' => currency_code
             xml.tag! 'n2:ShippingTotal', localized_amount(options[:shipping], currency_code),'currencyID' => currency_code
             xml.tag! 'n2:HandlingTotal', localized_amount(options[:handling], currency_code),'currencyID' => currency_code
@@ -660,12 +660,12 @@ module ActiveMerchant #:nodoc:
         (date.is_a?(Date) ? date.to_time : date).utc.iso8601
       end
 
-      def fractional_discount_code?(amount)
-        amount.to_i < 0 && amount.split(".").last != "00"
+      def fractional_discount_code?(item)
+        item[:amount].to_i < 0 && item[:amount].to_s.split(".").last != "00"
       end
 
-      def fractional_discount_code_and_non_fractional_currency?(amount, currency_code)
-        fractional_discount_code?(amount) && non_fractional_currency?(currency_code)
+      def fractional_discount_code_and_non_fractional_currency?(item, currency_code)
+        fractional_discount_code?(item) && non_fractional_currency?(currency_code)
       end
 
       def recalculated_subtotal(subtotal)
