@@ -662,7 +662,7 @@ module ActiveMerchant #:nodoc:
         item[:amount].to_i < 0 && item[:amount].to_s.split(".").last != "00"
       end
 
-      def recalculated_total(money, last_item, currency_code)
+      def calculate_total(money, last_item, currency_code)
         if fractional_discount_code?(last_item) && non_fractional_currency?(currency_code)
           amount = amount(money)
           return amount = amount.to_f.ceil
