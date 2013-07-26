@@ -553,12 +553,7 @@ module ActiveMerchant #:nodoc:
 
       def add_payment_details(xml, money, currency_code, options = {})
         xml.tag! 'n2:PaymentDetails' do
-          if options[:items].present?
-            order_total = calculate_total(money, options[:items][-1], currency_code)
-          else
-            order_total = localized_amount(money, currency_code)
-          end
-          xml.tag! 'n2:OrderTotal', order_total, 'currencyID' => currency_code
+          xml.tag! 'n2:OrderTotal', calculate_total(money, options, currency_code), 'currencyID' => currency_code
 
           # All of the values must be included together and add up to the order total
           if [:subtotal, :shipping, :handling, :tax].all?{ |o| options.has_key?(o) }
@@ -667,10 +662,10 @@ module ActiveMerchant #:nodoc:
         item[:amount].to_i < 0 && item[:amount].to_s.split(".").last != "00"
       end
 
-      def calculate_total(money, last_item, currency_code)
-        if fractional_discount_code?(last_item) && non_fractional_currency?(currency_code)
-          amount = amount(money)
-          return amount = amount.to_f.ceil
+      def calculate_total(money, options, currency_code)
+        if options[:items].present? && fractional_discount_code?(options[:items][-1]) && non_fractional_currency?(currency_code)
+          money = amount(money) unless money.to_s.include?(".")
+          return money.to_f.ceil
         else
           localized_amount(money, currency_code)
         end
